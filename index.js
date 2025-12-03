@@ -1,19 +1,3 @@
-// Dans le cours on utilise mongoose plutot que mongodb directement
-// je vais donc faire le code pour mongoose comme dans le cours même si c'est sensiblement la même chose
-const mongoose = require('mongoose');
-const uri2 = "mongodb+srv://troupleo_db_user2:pacomesuperbg@dbexamen0312.9ab96p0.mongodb.net/?appName=DBExamen0312";
-// let promise = mongoose.connect(uri2, {useNewUrlParser: true});
-let promise = mongoose.connect(uri2);
-
-promise.then( () => {
-    console.log("Base de données bien connectée avec mongoose");
-
-    app.listen(3000, () => {
-        console.log('On ecoute sur le port 3000');
-    })
-})
-
-
 // ------------------- Connection à la db avec mongodb -----------------------
 
 // On va importer MongoDB avec require pour pouvoir se connecter à la base de données de l'éxamen
@@ -50,29 +34,61 @@ promise.then( () => {
 
 // ------------------- Connection à la db avec mongodb -----------------------
 
+// Dans le cours on utilise mongoose plutot que mongodb directement
+// je vais donc faire le code pour mongoose comme dans le cours même si c'est sensiblement la même chose
+const mongoose = require("mongoose");
+const uri2 =
+  "mongodb+srv://troupleo_db_user2:pacomesuperbg@dbexamen0312.9ab96p0.mongodb.net/?appName=DBExamen0312";
+
+// On va importer le modèle Player pour pouvoir l'utiliser
+const Player = require("./models/player");
+
 // On va importer Express avec require pour pouvoir l'utiliser
-const express = require('express');
+const express = require("express");
 // On définit notre application avec express()
 const app = express();
 // Définition du port que l'on va écouter (on peut le changer directement ici si besoin)
 const PORT = 3000;
 
+app.use(express.json());
+
+// let promise = mongoose.connect(uri2, {useNewUrlParser: true});
+let promise = mongoose.connect(uri2);
+
+promise.then(() => {
+  console.log("Base de données bien connectée avec mongoose");
+});
 // On va écouter les requêtes sur le port défini
 app.listen(PORT, () => {
-    console.log('On ecoute le port 3000 !');
-})
+  console.log("On ecoute le port 3000 !");
+});
 
 // Quand on a une requete au début de la racin '/', on renvoie le fichier de base
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-    // __dirnam permet d'obtenir automatique l'arborescence du dossier courant
-})
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+  // __dirnam permet d'obtenir automatique l'arborescence du dossier courant
+});
 
 // On va avec app.use définir quel fichier on affiche quand on va sur une requête particulière
 // express.static permet de définir un dossier statique qui n'est pas une route serveur
-// app.use('/public', express.static('./client/public'));
-// app.use('/script', express.static('./client/script'));
+app.use("/pages", express.static("./pages"));
 
-// app.get('/liste', (req, res) => {
-//     res.send(Liste);
-// })
+app.use("/script", express.static("./script"));
+
+app.post("/addPlayer", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const newPlayer = new Player(req.body);
+    await newPlayer.save();
+    res.status(201).json( {
+        message : "Joueur ajouté avec succès",
+        Player: newPlayer
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du joueur :", error);
+    res.status(500).send("Erreur lors de l'ajout du joueur");
+  }
+});
+
+module.exports = app;
