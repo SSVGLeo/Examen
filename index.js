@@ -103,4 +103,35 @@ app.get("/getPlayers", async (req, res) => {
         })
 })
 
+// Cette version est déprécié et quand on ouvre la route du get
+// On a une page avec des erreurs qui indique :
+// MongooseError: Model.findOne() no longer accepts a callback
+
+// app.get("/getPlayers/:id", (req, res) => {
+//     Player.findOne( {_id: req.params.id}, (err, obj) => {
+//         if(err) {
+//             console.log(err);
+//             return res.status(500).send("Erreur serveur");
+//         }
+//         if(!obj) {
+//             return res.status(404).send("Joueur non trouvé");
+//         }
+//         res.send(obj);
+//     })
+// })
+
+app.get("/getPlayers/:id", async (req, res) => {
+  try {
+    const obj = await Player.findById(req.params.id);
+    if (!obj) {
+      return res.status(404).send("Joueur non trouvé");
+    }
+    res.json(obj);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
 module.exports = app;

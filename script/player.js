@@ -13,7 +13,7 @@ function addOneRow(data) {
             <td>${data.role}</td>
             <td>${data.nationality}</td>
             <td> <button> Supprimer ce joueur </button> </td>
-            <td><a href="./detail.html#${data._id}">Détails :</a></td>
+            <td><a href="./detail.html#${data._id}" target=blank>Détails :</a></td>
         </tr>
         `;
   // Il faudra rajouter dans le bouton l'appel de la fonction supprimer
