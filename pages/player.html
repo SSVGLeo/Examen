@@ -7,6 +7,11 @@
     <title>Esport Manager : Joueurs</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="/">Accueil</a>
+        </nav>
+    </header>
     <!-- Formulaire de création d'un nouveau joueur avec toutes les données
      renseigner dans le schéma de création du joueur -->
     <h1>Ajouter un nouveau joueur :</h1>
@@ -30,5 +35,28 @@
     <input type="text" name="playerNationality" id="playerNationality" placeholder="Nationalité du nouveau joueur">
 
     <button id="addNewPlayer">Valider le formulaire !</button>
+
+    <table style="border: 1px black solid">
+        <thead>
+            <td>Nom</td>
+            <td>Prénom</td>
+            <td>Equipe</td>
+            <td>Jeu</td>
+            <td>Rôle</td>
+            <td>Nationalité</td>
+            <td>Supprimer</td>
+        </thead>
+        <tbody id="tablePlayer">
+            <tr>
+                <td>testNom</td>
+                <td>testprénom</td>
+                <td>testEquipe</td>
+                <td>testJeu</td>
+                <td>testRôle</td>
+                <td>testNationalité</td>
+                <td><button>Bouton suppression</button></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

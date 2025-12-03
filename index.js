@@ -75,6 +75,7 @@ app.use("/pages", express.static("./pages"));
 
 app.use("/script", express.static("./script"));
 
+
 app.post("/addPlayer", async (req, res) => {
   try {
     console.log(req.body);
@@ -90,5 +91,16 @@ app.post("/addPlayer", async (req, res) => {
     res.status(500).send("Erreur lors de l'ajout du joueur");
   }
 });
+
+app.get("/getPlayers", async (req, res) => {
+    Player.find({})
+        .then((object) => {
+            return res.send(object);
+        })
+        .catch((error) => {
+            console.log("Erreur :", error);
+            return res.status(500);
+        })
+})
 
 module.exports = app;

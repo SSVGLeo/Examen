@@ -1,8 +1,61 @@
+// On créer la fonction addOneRow qui va créer une ligne dans le tableau
+// Pour chaque joueur présent dans la BDD
+
+function addOneRow(data) {
+  const table = document.querySelector("#tablePlayer");
+
+  table.innerHTML += `
+        <tr id="${data._id}">
+            <td>${data.name}</td>
+            <td>${data.surname}</td>
+            <td>${data.team}</td>
+            <td>${data.game}</td>
+            <td>${data.role}</td>
+            <td>${data.nationality}</td>
+            <td> <button> Supprimer ce joueur </button> </td>
+            <td><a href="./detail.html#${data._id}">Détails :</a></td>
+        </tr>
+        `;
+  // Il faudra rajouter dans le bouton l'appel de la fonction supprimer
+  // Qui prendra en paramêtre le data._id du joueur
+}
+
+// On fait le code pour fetch toutes les données des joueurs de la BDD
+// Et on va les utiliser pour les afficher dans le DOM
+function getPlayers() {
+  let myHeaders = new Headers();
+  let url = "/getPlayers";
+  let options = {
+    method: "GET",
+    headers: myHeaders,
+    mode: "cors",
+    cache: "default",
+  };
+
+  fetch(url, options)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        console.log("Il y a eu une erreur lors de l'import des joeurs", error);
+      }
+    })
+    .then((data) => {
+      data.forEach((element) => {
+        addOneRow(element);
+      });
+    })
+    .catch((error) => {
+      console.log("Erreur : ", error);
+    });
+}
+
+getPlayers();
+
 // On créer une fonction addPlayer qui va récupérer les valeurs dans le dom
 // Pour les ajouter à la base de données en suivant le Schéma définit
 
 function addPlayer() {
-    console.log("Ajout d un joueur demandé");
   // On récupère les valeurs dans le dom
   let name = document.querySelector("#playerName");
   let surname = document.querySelector("#playerSurname");
@@ -45,7 +98,7 @@ function addPlayer() {
     role.value === "" ||
     nationality.value === ""
   ) {
-    // Pour l'instant on aura juste une alerte du navigateur 
+    // Pour l'instant on aura juste une alerte du navigateur
     // et pas d'affichage dans le dom
     alert("Veuillez remplir tous les champs avant de valider");
     return;
@@ -60,13 +113,22 @@ function addPlayer() {
         if (response.ok) {
           return response.json();
         } else {
-        // En cas d'erreur on lance une erreur
+          // En cas d'erreur on lance une erreur
           throw new Error("Erreur le joueur n a pas pu être créer");
         }
       })
       .then((data) => {
-        console.log(data);
+        addOneRow(data.Player);
+
+        // On reset les champs une fois que c'est fait
+        name.value = "";
+        surname.value = "";
+        team.value = "";
+        game.value = "";
+        role.value = "";
+        nationality.value = "";
         // Plus tard on appelera la fonction qui ajoute le joueur à la liste affichée
+        //   Il faut aussi rajouter un message de confirmation dans le dom
       })
       .catch((error) => {
         console.log("Il y a eu une erreur : ", error);
