@@ -1,0 +1,11 @@
+A FAIRE PROJET BDD EXAMEN :
+
+-faire le put d'un player
+-faire le delete d'un player
+-faire la classe de player 
+-ajouter la classe de player à tous les gets
+
+-répéter tout ce que fait player mais avec team et game (en gros faut trois classes et méthodes mongoose en tout donc faut en faire 2 de plus)
+
+-faire le style du site (bootstrap si flemme)
+
