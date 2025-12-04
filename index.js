@@ -77,16 +77,17 @@ app.use("/script", express.static("./script"));
 
 app.use("/class", express.static("./class"));
 
-
+// On définit la route et les actions à faire quand on va vouloir faire
+// Un post d'une donnée dans le BDD
 app.post("/addPlayer", async (req, res) => {
   try {
     console.log(req.body);
 
     const newPlayer = new Player(req.body);
     await newPlayer.save();
-    res.status(201).json( {
-        message : "Joueur ajouté avec succès",
-        Player: newPlayer
+    res.status(201).json({
+      message: "Joueur ajouté avec succès",
+      Player: newPlayer,
     });
   } catch (error) {
     console.error("Erreur lors de l'ajout du joueur :", error);
@@ -94,16 +95,17 @@ app.post("/addPlayer", async (req, res) => {
   }
 });
 
+// Route qui va être utilisé pour obtenir tous les players de la BDD
 app.get("/getPlayers", async (req, res) => {
-    Player.find({})
-        .then((object) => {
-            return res.send(object);
-        })
-        .catch((error) => {
-            console.log("Erreur :", error);
-            return res.status(500);
-        })
-})
+  Player.find({})
+    .then((object) => {
+      return res.send(object);
+    })
+    .catch((error) => {
+      console.log("Erreur :", error);
+      return res.status(500);
+    });
+});
 
 // Cette version est déprécié et quand on ouvre la route du get
 // On a une page avec des erreurs qui indique :
@@ -122,6 +124,8 @@ app.get("/getPlayers", async (req, res) => {
 //     })
 // })
 
+// Route qui va être utilisé pour aller récupérer
+// Un seul player depuis la bdd avec son id précis
 app.get("/getPlayers/:id", async (req, res) => {
   try {
     const obj = await Player.findById(req.params.id);
@@ -135,5 +139,23 @@ app.get("/getPlayers/:id", async (req, res) => {
   }
 });
 
+// Route qui permet de modifier les informations d'un joueur
+// Si j'ai le temps il faudrait ajouter une verif de quels champs
+// Sont modifiés
+app.put("/updatePlayer/:id", async (req, res) => {
+  Player.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true,
+  })
+  .then((object) => {
+    return res.send(object);
+  })
+  .catch((error) => {
+    console.log('Error :', error);
+    return res.status(500);
+  })
+});
 
 module.exports = app;
