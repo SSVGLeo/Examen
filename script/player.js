@@ -1,3 +1,5 @@
+import { Player } from "../class/player.js";
+
 // On créer la fonction addOneRow qui va créer une ligne dans le tableau
 // Pour chaque joueur présent dans la BDD
 
@@ -42,7 +44,18 @@ function getPlayers() {
     })
     .then((data) => {
       data.forEach((element) => {
-        addOneRow(element);
+        // Ajout de la classe newPlayer où on va stocker les infos du player de la db
+        // On fait le pont entre le front et le back
+        let newplayer = new Player(
+          element._id,
+          element.name,
+          element.surname,
+          element.team,
+          element.game,
+          element.role, 
+          element.nationality
+        );
+        addOneRow(newplayer);
       });
     })
     .catch((error) => {

@@ -1,38 +1,49 @@
-  let nom = document.querySelector("#playerName");
-  let surname = document.querySelector("#playerSurname");
-  let team = document.querySelector("#playerTeam");
-  let game = document.querySelector("#playerGame");
-  let role = document.querySelector("#playerRole");
-  let nationality = document.querySelector("#playerNationality");
+import { Player } from "../class/player.js";
 
-  let url = window.location;
-  let playerid = url.hash.substring(1);
+let nom = document.querySelector("#playerName");
+let surname = document.querySelector("#playerSurname");
+let team = document.querySelector("#playerTeam");
+let game = document.querySelector("#playerGame");
+let role = document.querySelector("#playerRole");
+let nationality = document.querySelector("#playerNationality");
 
-  let myHeaders = new Headers();
-  let path = `/getPlayers/${playerid}`;
-  let options = {
-    method: 'GET',
-    headers: myHeaders,
-    mode: 'cors',
-    cache: 'default',
-  }
+let url = window.location;
+let playerid = url.hash.substring(1);
 
-  fetch(path, options)
-    .then((response) => {
-        if(!response.ok) {
-            throw new Error ("Erreur HTTP")
-        }
-        return response.json();
-    })
-    .then((data) => {
-        console.log(data);
-        nom.value = data.name;
-        surname.value = data.surname;
-        team.value = data.team;
-        game.value = data.game;
-        role.value = data.role;
-        nationality.value = data.nationality;
-    })
-    .catch((error) => {
-        console.log("Erreur lors du fetch du joueur", error);
-    })
+let myHeaders = new Headers();
+let path = `/getPlayers/${playerid}`;
+let options = {
+  method: "GET",
+  headers: myHeaders,
+  mode: "cors",
+  cache: "default",
+};
+
+fetch(path, options)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Erreur HTTP");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    console.log(data);
+    const player = new Player(
+      data._id,
+      data.name,
+      data.surname,
+      data.team,
+      data.game,
+      data.role,
+      data.nationality,
+    );
+    nom.value = player.name;
+    surname.value = player.surname;
+    team.value = player.team;
+    game.value = player.game;
+    role.value = player.role;
+    nationality.value = player.nationality;
+  })
+  .catch((error) => {
+    console.log("Erreur lors du fetch du joueur", error);
+  });

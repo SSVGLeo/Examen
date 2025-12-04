@@ -75,6 +75,8 @@ app.use("/pages", express.static("./pages"));
 
 app.use("/script", express.static("./script"));
 
+app.use("/class", express.static("./class"));
+
 
 app.post("/addPlayer", async (req, res) => {
   try {
