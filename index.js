@@ -158,4 +158,17 @@ app.put("/updatePlayer/:id", async (req, res) => {
   })
 });
 
+// Route qui permet de supprimer un player directement en
+// cliquant sur le bouton qui contient son ID
+app.delete("/deletePlayer/:id", async (req, res) => {
+  Player.deleteOne({_id: req.params.id})
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      res.sendStatus(500);
+    })
+})
+
 module.exports = app;

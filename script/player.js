@@ -1,5 +1,33 @@
 import { Player } from "../class/player.js";
 
+// On créer la fonction deletePlayer pour suprrimer le joueur
+// Mais il ne se met pas à jour dynamiquement pour l'instant
+// Il faudrait faire un getPlayers mais qui ne s'incrémente pas
+
+let deletedContainer = document.querySelector("#deletedContainer");
+
+function deletePlayer(id, name) {
+  let url = "/deletePlayer/" + id;
+  let options = {
+    method: "DELETE",
+  };
+  fetch(url, options).then((response) => {
+    deletedContainer.innerHTML = `<p> Le joueur ${name} a été supprimé</p>`;
+  });
+}
+
+// On fait un addEventListener global et si on clique sur un deletebtn
+// Alors on récupère son id et son nom et on supprime le player
+// Puis on affiche le message de suppression avec le nom
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("deleteBtn")) {
+    const id = e.target.dataset.id;
+    const name = e.target.dataset.name;
+    deletePlayer(id, name);
+    getPlayers();
+  }
+});
+
 // On créer la fonction addOneRow qui va créer une ligne dans le tableau
 // Pour chaque joueur présent dans la BDD
 
@@ -15,6 +43,7 @@ function addOneRow(data) {
             <td>${data.role}</td>
             <td>${data.nationality}</td>
             <td> <button> Supprimer ce joueur </button> </td>
+            <td><button class="deleteBtn" data-id="${data._id}" data-name="${data.name}">Supprimer</button></td>
             <td><a href="./detail.html#${data._id}" target=blank>Détails :</a></td>
         </tr>
         `;
@@ -52,7 +81,7 @@ function getPlayers() {
           element.surname,
           element.team,
           element.game,
-          element.role, 
+          element.role,
           element.nationality
         );
         addOneRow(newplayer);
